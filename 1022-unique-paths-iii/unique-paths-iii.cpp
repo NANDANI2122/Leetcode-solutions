@@ -1,52 +1,59 @@
 class Solution {
 public:
-    int dfs(vector<vector<int>>& grid, int x, int y, int remain) {
-        int m = grid.size();
-        int n = grid[0].size();
+    int m, n;
+    int nonObs;
+    int result;
+    vector<vector<int>>directions{{0,1}, {1,0}, {-1,0}, {0,-1}};
 
-        // Out of bounds or obstacle/visited
-        if (x < 0 || x >= m || y < 0 || y >= n || grid[x][y] == -1)
-            return 0;
+    void backTrack(vector<vector<int>>& grid, int i, int j, int count){
 
-        // Reached ending square
-        if (grid[x][y] == 2) {
-            return remain == 1;   // end must be the last cell visited
+        if( i<0 || i>=m || j<0 || j >=n || grid[i][j] == -1) return ;
+
+        if(grid[i][j] == 2){
+            if(count == nonObs){
+                result ++;
+            }
+            return;
         }
 
-        int temp = grid[x][y];
-        grid[x][y] = -1; // mark visited
+        grid[i][j] = -1;
 
-        int paths = 0;
+        for(auto &dir : directions){
+            int new_i = i + dir[0];
+            int new_j = j + dir[1];
 
-        paths += dfs(grid, x + 1, y, remain - 1);
-        paths += dfs(grid, x - 1, y, remain - 1);
-        paths += dfs(grid, x, y + 1, remain - 1);
-        paths += dfs(grid, x, y - 1, remain - 1);
+            backTrack(grid, new_i, new_j, count+1);
+        }
 
-        grid[x][y] = temp; // backtrack
+        grid[i][j] = 0;
 
-        return paths;
     }
-
     int uniquePathsIII(vector<vector<int>>& grid) {
-        int m = grid.size();
-        int n = grid[0].size();
+        m = grid.size();
+        n = grid[0].size();
 
-        int startX = 0, startY = 0;
-        int cells = 0;
+        result = 0;
+        nonObs = 0;
 
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                if (grid[i][j] != -1)
-                    cells++;
+        int start_x = 0,start_y = 0;
 
-                if (grid[i][j] == 1) {
-                    startX = i;
-                    startY = j;
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+
+                if(grid[i][j] == 0) nonObs++;
+
+                if(grid[i][j] == 1){
+                    start_x = i;
+                    start_y = j;
                 }
             }
         }
+        nonObs += 1;
+        int count = 0;
+        backTrack(grid, start_x, start_y, count);
 
-        return dfs(grid, startX, startY, cells);
+        return result;
+
+
     }
 };
