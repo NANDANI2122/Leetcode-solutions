@@ -1,0 +1,26 @@
+class Solution {
+public:
+    bool isPalindrome(string s) {
+
+        if(s.size()==0 || s.size()==1 ) return true;
+
+        bool valid = true;
+        int i=0, j= s.size()-1;
+        while(i<=j){
+            while(i<=j && !isalnum(s[i])) i++;
+            while(i<=j && !isalnum(s[j])) j--;
+
+            if(i>j) break;
+            if(tolower(s[i]) == tolower(s[j])){
+                valid = true;
+                i++;
+                j--;
+            }
+            else{
+                valid = false;
+                break;
+            }
+        }
+        return valid;
+    }
+};
