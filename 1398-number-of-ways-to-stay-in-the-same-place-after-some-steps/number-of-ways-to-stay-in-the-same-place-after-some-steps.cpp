@@ -12,7 +12,8 @@ public:
 
         if(t[idx][steps] != -1) return t[idx][steps];
 
-        int res = solve(idx+1, steps-1);
+//to avoid overflow right,left,stay use nhi hua h instead single res use hua h
+        int res = (solve(idx+1, steps-1)) % MOD;
 
         res = (res + solve(idx-1, steps-1)) % MOD;
         res = (res + solve(idx, steps-1)) % MOD;
